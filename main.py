@@ -16,7 +16,7 @@ class snapchat:
         self.driver_arguments = ["--window-size=1920,1080", "--disable-gpu", "--start-maximized", "--no-sandbox", f"--user-data-dir={os.path.join(os.path.dirname(__file__), 'driver')}"]
         self.driver_arguments.extend(driver_arguments)
         
-        self.paths = {"friends": {"path": "FiLwP", "path_type": "classpath"}, "send_snaps": {"path": "HEkDJ", "path_type": "classpath"}, "snap_take_button": {"path": '//*[@id="root"]/div[1]/div[3]/div/div/div/div[2]/div[2]/div/button[1]', "path_type": "xpath"},"take_snap": {"path": "UEYhD", "path_type": "classpath"}, "confirm_snap": {"path": "/html/body/div[3]/div/div/div/div/div/div/div[2]/div/form/div[2]/button", "path_type": "xpath"}}
+        self.paths = {"friends": {"path": "FiLwP", "path_type": "classpath"}, "send_snaps": {"path": "HEkDJ", "path_type": "classpath"}, "snap_take_button": {"path": '//*[@id="root"]/div[1]/div[3]/div/div/div/div[2]/div[2]/div/button[1]', "path_type": "xpath"},"take_snap": {"path": "UEYhD", "path_type": "classpath"}, "confirm_snap": {"path": "/html/body/div[3]/div/div/div/div/div/div/div[2]/div/form/div[2]/button", "path_type": "xpath"}, "choice_users": {"path": "RbA83", "path_type": "classpath"}}
         
         
     def return_element(self, driver, path, type="xpath"):
@@ -58,6 +58,12 @@ class snapchat:
             button.click()
             button = random.choice(self.return_element(driver, self.paths["take_snap"]["path"], self.paths["take_snap"]["path_type"]))
             button.click()
+            button = self.return_element(driver, self.paths["choice_users"]["path"], self.paths["choice_users"]["path_type"])
+            clicked = []
+            for button in button:
+                if not button.text in clicked:
+                   button.click()
+                   clicked.append(button.text)
             button = self.return_element(driver, self.paths["confirm_snap"]["path"], self.paths["confirm_snap"]["path_type"])
             button.click()
          except Exception as e:
