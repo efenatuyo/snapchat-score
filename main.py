@@ -10,7 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 class snapchat:
-    def __init__(self, path_delay=0.5, driver_arguments=[]):
+    def __init__(self, path_delay=0.2, driver_arguments=[]):
         
         self.path_delay = path_delay
         self.driver_arguments = ["--window-size=1920,1080", "--disable-gpu", "--start-maximized", "--no-sandbox", f"--user-data-dir={os.path.join(os.path.dirname(__file__), 'driver')}"]
@@ -50,8 +50,10 @@ class snapchat:
          for snap in send_snaps.copy():
           try:
             snap.click()
+            time.sleep(0.2)
             button = random.choice(self.return_element(driver, self.paths["take_snap"]["path"], self.paths["take_snap"]["path_type"]))
             button.click()
+            time.sleep(0.2)
             button = self.return_element(driver, self.paths["confirm_snap"]["path"], self.paths["confirm_snap"]["path_type"])
             button.click()
           except:
