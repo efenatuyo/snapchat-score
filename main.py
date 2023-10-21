@@ -10,7 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 class snapchat:
-    def __init__(self, path_delay=1, driver_arguments=[]):
+    def __init__(self, path_delay=5, driver_arguments=[]):
         
         self.path_delay = path_delay
         self.driver_arguments = ["--window-size=1920,1080", "--disable-gpu", "--start-maximized", "--no-sandbox", f"--user-data-dir={os.path.join(os.path.dirname(__file__), 'driver')}"]
@@ -49,9 +49,10 @@ class snapchat:
         html_element = driver.find_element(By.TAG_NAME, "html")
         action_chains.move_to_element_with_offset(html_element, 0, 0).click().perform()
         while True:
+         try:
           friends = self.return_element(driver, self.paths["friends"]["path"], self.paths["friends"]["path_type"])
-          for user in [user for user in friends if friends[-1].text != user.text]:
-           try:
+          listo = [user for user in friends if friends[-1].text != user.text]
+          for user in listo.copy():
             user.click()
             button = self.return_element(driver, self.paths["snap_take_button"]["path"], self.paths["snap_take_button"]["path_type"])
             button.click()
@@ -59,10 +60,11 @@ class snapchat:
             button.click()
             button = self.return_element(driver, self.paths["confirm_snap"]["path"], self.paths["confirm_snap"]["path_type"])
             button.click()
-           except:
+         except Exception as e:
+              print(e)
               action_chains = ActionChains(driver)
               html_element = driver.find_element(By.TAG_NAME, "html")
-              action_chains.move_to_element_with_offset(html_element, 0, 0).click().perform()
-        
+              action_chains.move_to_element_with_offset(html_element, 0, 0).click().perform()     
+
 snapchat = snapchat()
 snapchat.farm_points()
