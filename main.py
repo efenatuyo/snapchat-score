@@ -10,18 +10,18 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 class snapchat:
-    def __init__(self, path_delay=0.25, driver_arguments=[]):
+    def __init__(self, path_delay=0.5, driver_arguments=[]):
         
         self.path_delay = path_delay
         self.driver_arguments = ["--window-size=1920,1080", "--disable-gpu", "--start-maximized", "--no-sandbox", f"--user-data-dir={os.path.join(os.path.dirname(__file__), 'driver')}"]
         self.driver_arguments.extend(driver_arguments)
         
-        self.paths = {"friends": {"path": "FiLwP", "path_type": "classpath"}, "send_snaps": {"path": "HEkDJ", "path_type": "classpath"}, "take_snap": {"path": "UEYhD", "path_type": "classpath"}, "confirm_snap": {"path": "/html/body/div[4]/div/div/div/div/div/div/div[2]/div/form/div[2]/button", "path_type": "xpath"}}
+        self.paths = {"friends": {"path": "FiLwP", "path_type": "classpath"}, "send_snaps": {"path": "HEkDJ", "path_type": "classpath"}, "take_snap": {"path": "UEYhD", "path_type": "classpath"}, "confirm_snap": {"path": "/html/body/div[3]/div/div/div/div/div/div/div[2]/div/form/div[2]/button", "path_type": "xpath"}}
         
         
     def return_element(self, driver, path, type="xpath"):
         if type == "xpath":
-            return WebDriverWait(driver, self.path_delay).until(EC.visibility_of_all_elements_located((By.XPATH, path)))
+            return WebDriverWait(driver, self.path_delay).until(EC.presence_of_element_located((By.XPATH, path)))
         elif type == "classpath":
             return WebDriverWait(driver, self.path_delay).until(EC.visibility_of_all_elements_located((By.CLASS_NAME, path)))
         else:
@@ -46,27 +46,23 @@ class snapchat:
         html_element = driver.find_element(By.TAG_NAME, "html")
         action_chains.move_to_element_with_offset(html_element, 0, 0).click().perform()
         send_snaps = self.return_element(driver, self.paths["send_snaps"]["path"], self.paths["send_snaps"]["path_type"])
-        for i in range(25):
+        while True:
          for snap in send_snaps.copy():
           try:
             snap.click()
-            time.sleep(0.5)
             button = random.choice(self.return_element(driver, self.paths["take_snap"]["path"], self.paths["take_snap"]["path_type"]))
             button.click()
-            time.sleep(0.5)
-            button = random.choice(self.return_element(driver, self.paths["confirm_snap"]["path"], self.paths["confirm_snap"]["path_type"]))
+            button = self.return_element(driver, self.paths["confirm_snap"]["path"], self.paths["confirm_snap"]["path_type"])
             button.click()
           except:
               action_chains = ActionChains(driver)
               html_element = driver.find_element(By.TAG_NAME, "html")
               action_chains.move_to_element_with_offset(html_element, 0, 0).click().perform()
               continue
-        time.sleep(60)
         
     
         
                 
 
 snapchat = snapchat()
-while True:
-    snapchat.farm_points()
+snapchat.farm_points()
