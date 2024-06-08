@@ -1,3 +1,4 @@
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
@@ -17,8 +18,9 @@ class Snapchat:
         options = webdriver.ChromeOptions()
         for option in self.driver_arguments:
             options.add_argument(option)
-            
-        driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options=options)
+        
+        service = Service(ChromeDriverManager().install())
+        driver = webdriver.Chrome(service=service, options=options)
         driver.get("https://web.snapchat.com/")
         return driver
     
@@ -56,7 +58,6 @@ class Snapchat:
                 action_chains = ActionChains(driver)
                 html_element = driver.find_element(By.TAG_NAME, "html")
                 action_chains.move_to_element_with_offset(html_element, 0, 0).click().perform()     
-
 
 snapchat = Snapchat()
 snapchat.farm_points()
