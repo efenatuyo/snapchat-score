@@ -1,0 +1,3 @@
+undetected-chromedriver
+selenium
+webdriver-manager
